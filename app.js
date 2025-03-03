@@ -14,55 +14,67 @@ class Utility {
 
 let app = $("#app");
 
-let product = {
-    name: "Un super téléphone",
-    price: 200
-};
-
-let html = `
-    <h1 if="hidden">{{ name }}</h1>
-    <article>
-        <p>
-            <ul for="products">
-                <li>{{ title }}</li>
-                <li>{{ price }} €</li>
-            </ul>
-        </p>
-    </article>
-    <input type="text" id="input_title">
-    <button id="hideBtn">Click me mofo ({{ hidden }})</button>
-`;
-
-let product_page = new Component({ template: html, root: app, state: product });
-
-let html2 = `
-    <p>{{ test }}</p>
-`;
-
-let component2 = new Component({
-    template: html2,
+let product_page = new Component({
+    template: `
+        <h1>Our products</h1>
+        <article>
+            <p>
+                <ul>
+                    <li for="products">{{ title }} - {{ price }}€</li>
+                </ul>
+            </p>
+        </article>
+        <form id="addProduct">
+            <input type="text" id="productName" placeholder="Name" required>
+            <input type="number" step="1" min="1" id="productPrice" placeholder="Price" required>
+            <br>
+            <button type="submit">Add</button>
+        </form>
+    `,
     root: app,
     state: {
-        test: 'coucou'
-    }
+        products: [
+            {
+                title: 'A beautiful table',
+                price: 1999,
+            },
+            {
+                title: 'A succulent vol-au-vent',
+                price: 15,
+            },
+        ],
+    },
 });
 
-let products = [
-    {
-        title: 'Une belle table',
-        price: 2001
+let product_form =$('#addProduct');
+
+product_form.on('submit', e => {
+    e.preventDefault();
+
+    product_page.setState({
+        products: [...product_page.state.products.value, {
+            title: $('#productName').value,
+            price: $('#productPrice').value,
+        }],
+    });
+
+    product_form.empty();
+});
+
+let other_component = new Component({
+    template: `
+        <hr>
+        <p if="hidden">{{ test }}</p>
+        <br>
+        <button id="hideBtn">Hide text</button>
+    `,
+    root: app,
+    state: {
+        hidden: false,
+        test: 'Hey from component 2!'
     },
-    {
-        title: 'Un vol-au-vent succulent',
-        price: 48
-    }
-];
+});
 
-$('#input_title').on('input', e => product_page.setState({ name: e.target.value }));
-$('#hideBtn').on('click', e => product_page.setState({
-    hidden: !product_page.state.hidden.value
+$('#hideBtn').on('click', e => other_component.setState({
+    hidden: !other_component.state.hidden.value
 }));
-
-product_page.setState({ products: products });
-
-function changeTitle(e) { }

@@ -99,12 +99,12 @@ class Component {
     for (const key in state) {
       if (!this.state[key]) {
         this.state[key] = {
-          value: state[key],
+          value: null,
           listeners: this.findVariableListeners(this.root.children, key)
         };
-      } else {
-        this.state[key].value = state[key];
       }
+
+      this.state[key].value = state[key];
       this.state[key].listeners.forEach(l => {
         l.callback(state[key]);
       });
@@ -143,11 +143,13 @@ class Component {
             bool ? element.element.hide() : element.element.show()
         });
       } else if (element.element.getAttribute("for") == variable) {
+        let parent = element.element.parentElement;
+
         listeners.push({
           element: element,
           callback: array => {
-            let parent = element.element.parentElement;
             parent.innerHTML = "";
+            
             for (let i = 0; i < array.length; i++) {
               const object = array[i];
               let newElement = element.element.cloneNode(true);

@@ -22,14 +22,14 @@ let popup = function (append, text, color) {
     }
 
     popup = `
-                    <div id="popup">
-                        <p id="popup_text"></p>
-                        <div id="popup_close">
-                            <span class=""></span>
-                            <span class=""></span>
-                        </div>
-                    </div>
-                `;
+        <div id="popup">
+            <p id="popup_text"></p>
+            <div id="popup_close">
+                <span class=""></span>
+                <span class=""></span>
+            </div>
+        </div>
+    `;
 
     append.insertBefore($_(popup), append.children[0]);
 
